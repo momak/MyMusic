@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "My Music Home";
+}
+
+<div class="text-center col-lg-9">
+    <h1 class="display-4">My Music</h1>
+    <div class="row">
+        <div class="form-group">
+            <label for="selArtists">Artists</label>
+            <select class="custom-select" id="selArtists">
+            </select>
+        </div>
+        <div class="form-group">
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <table id="tblMusic" class="table table-dark table-hover .table-responsive-md">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Song</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+
+
+    <script>
+        $(document).ready(function () {
+            GetMusicsData();
+            $('#selArtists').change(function () {
+                let artistId = $('#selArtists').val();
+                GetArtistData(artistId);
+            });
+        });
+
+
+
+        async function GetMusicsData() {
+            try {
+                var response = await axios.get("https://localhost:44372/api/Artists");
+                $('#selArtists').empty();
+                $('#selArtists').append($('<option></option>')
+                    .val("")
+                    .attr('disabled', true)
+                    .attr('selected', true)
+                    .html("Select Artist"));
+                $.each(response.data, function (i, p) {
+                    $('#selArtists').append($('<option></option>').val(p.id).html(p.name));
+                });
+            } catch (error) {
+                alert(error); // catches both errors
+            }
+        }
+
+        async function GetArtistData(artistId) {
+            try {
+                var response = await axios.get(`https://localhost:44372/api/Musics/Artist/${artistId}`);
+                let table = $('#tblMusic');
+                table.children()[1].remove();
+                let data = response.data;
+                generateTable(table, data);
+            } catch (error) {
+                alert(error); // catches both errors
+            }
+        }
+
+        function generateTable(table, data) {
+            var doc = document;
+            var fragment = doc.createDocumentFragment();
+            var tbody = doc.createElement("tbody");
+            for (let element of data) {
+                var tr = doc.createElement("tr");
+
+                var tdId = doc.createElement("td");
+                tdId.innerHTML = element.id;
+                tr.appendChild(tdId);
+
+                var tdName = doc.createElement("td");
+                tdName.innerHTML = element.name;
+                tr.appendChild(tdName);
+
+                //does not trigger reflow
+                tbody.appendChild(tr);
+            }
+            fragment.appendChild(tbody);
+            table.append(fragment);
+        }
+    </script>
+}

@@ -33,10 +33,20 @@ namespace MyMusic.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MusicResource>> GetMusicById(int id)
+        public async Task<ActionResult<MusicResource>> GetMusicById([FromRoute] int id)
         {
             var music = await _musicService.GetMusicById(id);
             var musicResource = _mapper.Map<Music, MusicResource>(music);
+
+            return Ok(musicResource);
+        }
+
+        [HttpGet("Artist/{id}")]
+        public async Task<ActionResult<IEnumerable<MusicResource>>> GetMusicByArtistId(int id)
+        
+        {
+            var music = await _musicService.GetMusicsByArtistId(id);
+            var musicResource = _mapper.Map<IEnumerable<Music>, IEnumerable<MusicResource>>(music);
 
             return Ok(musicResource);
         }

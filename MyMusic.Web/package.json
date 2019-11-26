@@ -1,0 +1,27 @@
+{
+  "name": "MyMusic.Web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wbp": "webpack",
+    "start": "webpack --config webpack.config.js --watch --progress --profile",
+      "build": "webpack --config webpack.config.js --progress --profile",
+      "prod": "webpack --env.NODE_ENV=production --config webpack.config.js --progress"
+    },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.3.0",
+    "style-loader": "^1.0.0",
+    "url-loader": "^2.3.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "axios": "^0.19.0"
+  }
+}

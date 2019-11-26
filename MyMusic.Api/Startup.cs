@@ -15,6 +15,8 @@ namespace MyMusic.Api
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -40,6 +42,17 @@ namespace MyMusic.Api
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44342")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod(); ;
+                    });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,10 +68,13 @@ namespace MyMusic.Api
                 app.UseHsts();
             }
 
+            
             app.UseHttpsRedirection();
             
             app.UseRouting();
-            
+
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
